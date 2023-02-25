@@ -12,8 +12,20 @@
 - the delivering data includes start point, destination distance, duration and way
 
 
-##CRUD
+## CRUD
 
 - Using delivering data to set up a favorite list: url CURL -X GET ~/favorites
 - Adding the delivering data: url curl -X GET ~/favorites/1
 - Deleting a certain data: url curl -X DELETE ~/favorites/1
+
+## Applying Azure spring app
+
+- check route between malmo central station and malmo opera
+
+![img1](https://github.com/niuniu268/azure_tomtom_h2/blob/master/img/Screenshot_azure_1.png)
+
+- show the favorite list
+
+![img2](https://github.com/niuniu268/azure_tomtom_h2/blob/master/img/Screenshot_azure_2.png)
+
+
