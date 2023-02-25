@@ -1,0 +1,25 @@
+key: vMzB6Sn3NOG3aXtHTOnd7TLg8aiwIM2f
+
+#spring:
+#  datasource:
+#    druid:
+#      url: jdbc:mysql://azuremysql-1.mysql.database.azure.com:3306/test?useSSL=true
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      username: niuniu
+#      password: louis268@
+spring:
+  h2:
+    console:
+      path: /h2
+      enabled: true
+  datasource:
+    url: jdbc:h2:~/test
+    hikari:
+      driver-class-name: org.h2.Driver
+      username: sa
+      password: 123456
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+
