@@ -84,7 +84,15 @@ public class TomtomController {
 
     @GetMapping("/abbe/{start}/{destination}")
     @ResponseBody
-    public ResponseEntity<Map> searchStation(@PathVariable String start, @PathVariable String destination ) throws URISyntaxException {
+    public ResponseEntity<Map> searchStation(@PathVariable String start, @PathVariable String destination, HttpServletRequest request ) throws URISyntaxException {
+
+        String header = request.getHeader( "x-api-key" );
+        String abbe = "Abbe";
+        int i = abbe.hashCode( );
+
+        if(!header.equals( i+"" )){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
 
         String latitude = tomtomServices.getLatitude( start );
@@ -93,8 +101,7 @@ public class TomtomController {
 
         Map pedestrian = tomtomServices.itinerary( latitude, latitude1, "pedestrian", 0 );
 
-        String abbe = "Abbe";
-        int i = abbe.hashCode( );
+
 
         HttpHeaders headers = new HttpHeaders( );
         headers.add( "x-api-key", i+"" );
