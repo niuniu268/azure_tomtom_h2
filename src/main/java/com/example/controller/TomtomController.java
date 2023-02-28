@@ -9,10 +9,15 @@ import com.example.service.TomtomServicesImpl;
 //import org.apache.ibatis.javassist.expr.NewArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Array;
@@ -33,7 +38,10 @@ public class TomtomController {
 
     @GetMapping("/{start}/{destination}/{way}")
     @ResponseBody
-    public Map[] searchPoint(@PathVariable String start, @PathVariable String destination, @PathVariable String way ) throws URISyntaxException {
+    public Map[] searchPoint(@PathVariable String start, @PathVariable String destination, @PathVariable String way, HttpServletRequest httpServletRequest) throws URISyntaxException {
+
+        String connection = httpServletRequest.getHeader( "Connection" );
+        System.out.println(connection );
 
         Map[] arraylist = new Map[3];
 
@@ -76,7 +84,7 @@ public class TomtomController {
 
     @GetMapping("/abbe/{start}/{destination}")
     @ResponseBody
-    public Map searchStation(@PathVariable String start, @PathVariable String destination ) throws URISyntaxException {
+    public ResponseEntity<Map> searchStation(@PathVariable String start, @PathVariable String destination ) throws URISyntaxException {
 
 
         String latitude = tomtomServices.getLatitude( start );
@@ -85,7 +93,16 @@ public class TomtomController {
 
         Map pedestrian = tomtomServices.itinerary( latitude, latitude1, "pedestrian", 0 );
 
-        return pedestrian;
+        String abbe = "Abbe";
+        int i = abbe.hashCode( );
+
+        HttpHeaders headers = new HttpHeaders( );
+        headers.add( "x-api-key", i+"" );
+
+        ResponseEntity <Map> entity = new ResponseEntity <>( pedestrian, headers, HttpStatus.ACCEPTED );
+
+
+        return entity;
 
     }
 
