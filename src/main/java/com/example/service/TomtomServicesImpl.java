@@ -5,14 +5,19 @@ import com.example.pojo.*;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TomtomServicesImpl {
@@ -52,6 +57,7 @@ public class TomtomServicesImpl {
         return data;
     }
 
+
     public Map itinerary (String start, String destination, String way, Integer routeType) throws URISyntaxException {
 
         String uri;
@@ -64,6 +70,7 @@ public class TomtomServicesImpl {
         }
 
         ResponseEntity <Map> entity = restTemplate.getForEntity( new URI( uri ), Map.class );
+
 
 
         return entity.getBody();
@@ -97,6 +104,37 @@ public class TomtomServicesImpl {
 
 
         return position.getLat()+","+position.getLon();
+
+    }
+
+    public Map getCommunalData(String start, String destination){
+
+        String[] split1 = start.split( "\\s" );
+        String[] split2 = destination.split( "\\s" );
+
+        System.out.println(split1[0] );
+        System.out.println(split2[0] );
+
+        String uri = "https://komtrafficapp-komtrafficapplication.azuremicroservices.io/search/"+split1[0]+"/"+split2[0];
+
+        LinkedMultiValueMap <String, String> valueMap = new LinkedMultiValueMap <>( );
+        valueMap.add( "x-api-key","2033732" );
+
+        ResponseEntity <Object> exchange = restTemplate.exchange( uri, HttpMethod.GET, new HttpEntity <>( valueMap ), Object.class );
+
+        System.out.println(exchange );
+
+        Object body = exchange.getBody( );
+
+        String s = body.toString( );
+
+        String substring = s.substring( 1, s.length( ) - 1 );
+
+        Map <String, String> map = Stream.of( substring.split( "," ) ).
+                map( se -> se.split( "=" ) ).
+                collect( Collectors.toMap( arr -> arr[0], arr -> arr[1] ) );
+
+        return map;
 
     }
 }

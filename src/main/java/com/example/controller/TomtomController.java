@@ -33,17 +33,24 @@ public class TomtomController {
     @Autowired
     private TomtomServicesImpl tomtomServices;
 
-    public Favorites[] fArray = new Favorites[3];
+    Favorites[] fArray = new Favorites[3];
+
+
 
 
     @GetMapping("/{start}/{destination}/{way}")
     @ResponseBody
     public Map[] searchPoint(@PathVariable String start, @PathVariable String destination, @PathVariable String way, HttpServletRequest httpServletRequest) throws URISyntaxException {
 
-        String connection = httpServletRequest.getHeader( "Connection" );
-        System.out.println(connection );
 
-        Map[] arraylist = new Map[3];
+        Map[] arraylist = new Map[4];
+
+        boolean matches = destination.matches( "(\\w*\\s)*station$" );
+        System.out.println(matches );
+
+        if(matches==true){
+            arraylist[3] = tomtomServices.getCommunalData(start, destination);
+        }
 
 
         String latitude = tomtomServices.getLatitude( start );
@@ -69,11 +76,17 @@ public class TomtomController {
 
         }
 
-        for (int i = 0; i < fArray.length; i++) {
-
-            System.out.println(fArray[i] );
-
-        }
+//        for (Map map : arraylist) {
+//
+//            System.out.println(map );
+//
+//        }
+//
+//        for (int i = 0; i < fArray.length; i++) {
+//
+//            System.out.println(fArray[i] );
+//
+//        }
 
 
         return arraylist;
@@ -102,11 +115,10 @@ public class TomtomController {
         Map pedestrian = tomtomServices.itinerary( latitude, latitude1, "pedestrian", 0 );
 
 
-
         HttpHeaders headers = new HttpHeaders( );
         headers.add( "x-api-key", i+"" );
 
-        ResponseEntity <Map> entity = new ResponseEntity <>( pedestrian, headers, HttpStatus.ACCEPTED );
+        ResponseEntity <Map> entity = new ResponseEntity <>(pedestrian, headers, HttpStatus.ACCEPTED );
 
 
         return entity;
