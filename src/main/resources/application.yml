@@ -26,4 +26,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+    operations-sorter: method
 
