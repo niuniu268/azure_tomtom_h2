@@ -19,6 +19,8 @@
 
 ## CRUD
 
+- Applying H2 database: create a table 'favorites'
+```create table favorites (id int not null auto_increment,start varchar(255),destination varchar(255),distance varchar(50),duration varchar(50),way varchar(50),primary key (id));```
 - Using delivering data to set up a favorite list: url CURL -X GET ~/favorites
 - Adding the delivering data: url curl -X GET ~/favorites/1
 - Deleting a certain data: url curl -X DELETE ~/favorites/1
